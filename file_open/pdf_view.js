@@ -89,7 +89,7 @@ export default class PdfView extends Component {
                         style={styles.input_style}
                         underlineColorAndroid='transparent'
                     />
-                    <TouchableHighlight   style={styles.btn} onPress={()=>this.prePage()}>
+                    <TouchableHighlight   style={styles.btn} onPress={()=>this.to_page()}>
                         <Text style={styles.btnText}>{'跳转'}</Text>
                     </TouchableHighlight>
                     <TouchableHighlight  disabled={this.state.page==1} style={this.state.page==1?styles.btnDisable:styles.btn} onPress={()=>this.prePage()}>
