@@ -29,6 +29,7 @@ const toTop = require('../img/toTop.png')
 const unknow = require('../img/unknow.png')
 const dir = require('../img/dir.png')
 const pdf = require('../img/pdf.png')
+const empty_page = require('../img/empty_page.png')
 
 
 export default class IndexPage extends Component {
@@ -81,9 +82,12 @@ export default class IndexPage extends Component {
         // console.log('组件加载完成')
     }
     renderContent(dataSource) {
-        const isEmpty = this.state.sdcard_fileList === null
+        const isEmpty = this.state.sdcard_fileList === null || this.state.sdcard_fileList.length === 0
         if (isEmpty) {
-            return <View style={{ height: 20, alignItems: 'center', justifyContent: 'flex-end' }}><Text>加载中...</Text></View>
+            return <View style={{ flex:1, alignItems: 'center', justifyContent: 'flex-start' ,backgroundColor:'rgba(255,255,255,0.2)'}}><View>{this.renderHeader()}</View><View style={{alignItems:'center',justifyContent:'center',flex:1}}>
+                <Image source={empty_page} style={{height:35,width:35}}/>
+                <Text style={{color:'#fff'}}>文件夹为空</Text>
+                </View></View>
         } else {
             return (
                 <ListView
@@ -91,7 +95,7 @@ export default class IndexPage extends Component {
                     renderRow={this.renderRow}
                     enableEmptySections={true}
                     renderHeader={this.renderHeader}
-                    style={{flex:1,backgroundColor:'#fff'}}
+                    style={{flex:1,backgroundColor:'rgba(255,255,255,0.2)'}}
                 />
             )
         }
@@ -238,18 +242,18 @@ export default class IndexPage extends Component {
         console.log(array)
         var head_title = ''
         array.forEach(function (element) {
-            head_title+=(element+'>')
+            head_title+=(element+' > ')
         }, this)
         console.log(head_title)
-        head_title=head_title.substr(1)
+        // head_title=head_title.substr(1)
         return (
             <View >
                 <Text style={styles.head_nav}>{head_title}</Text>
                 <TouchableOpacity style={styles.headStyle} onPress={() => { this.return_before() }}>
                     <Image source={toTop} style={{height:25,width:25}}/>
-                    <Text style={{fontSize:16,}}>  返回上一层</Text>
+                    <Text style={{fontSize:16,paddingLeft:15,color:'#fff'}}>返回上一层</Text>
                 </TouchableOpacity>
-                {this.state.sdcard_fileList.length == 0 ? <Text style={{ paddingLeft: 10, }}>文件夹为空</Text> : <Text></Text>}
+                {/* {this.state.sdcard_fileList.length == 0 ? <Text style={{ paddingLeft: 10, }}>文件夹为空</Text> : <Text></Text>} */}
             </View>
 
         )
@@ -272,9 +276,12 @@ export default class IndexPage extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Image source={require('../img/back.png')} style={{alignItems:'center',resizeMode: Image.resizeMode.stretch ,width:Dimensions.get('window').width,height:Dimensions.get('window').height-50}}>
                 <View style={{ flex: 1, width: Dimensions.get('window').width}}>
                     {this.renderContent(this.state.dataSource.cloneWithRows(this.setState.sdcard_fileList == null ? [] : this.setState.sdcard_fileList))}
+                
                 </View>
+                </Image>
             </View>
         )
     }
@@ -284,7 +291,7 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#000',
     },
     renderrow: {
         padding:10,
@@ -292,7 +299,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor:'#fff'
+        // backgroundColor:'rgba(255,255,255,0.5)'
     },
     row_text: {
         fontSize: 17,
@@ -301,7 +308,8 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         borderBottomWidth:0.5,
         borderColor:'#f2f3f8',
-        flex:1
+        flex:1,
+        color:'#fff'
     },
     headStyle: {
         flexDirection:'row',
@@ -315,7 +323,9 @@ const styles = StyleSheet.create({
         borderColor: '#BFBFBF'
     },
     head_nav:{
-        backgroundColor:'#F6AD3C',
-        color:'#fff',fontSize:14
+        backgroundColor:'rgba(255,255,255,0.2)',
+        color:'#fff',fontSize:14,padding:5,
+        width:Dimensions.get('window').width,
+        flexWrap:'wrap'
     }
 });

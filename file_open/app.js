@@ -48,7 +48,7 @@ const Navigator = StackNavigator(
             alignSelf:'center'
         } ,
         headerStyle:{
-            backgroundColor:"#F6AD3C",
+            backgroundColor:"rgba(0,0,0,0.3)",
             height:50,
             elevation: 0
         },
