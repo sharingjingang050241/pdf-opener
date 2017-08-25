@@ -17,7 +17,6 @@ import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker
 import PDFView from 'react-native-pdf-view';
 import OpenFile from 'react-native-doc-viewer';
 import RNFetchBlob from 'react-native-fetch-blob';
-
 import Icon from 'antd-mobile/lib/icon';
 import Toast from 'antd-mobile/lib/toast';
 
@@ -26,11 +25,15 @@ const FileOpener = require('react-native-file-opener');
 var SavePath = Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.DocumentDirectoryPath;
 const dirs = RNFetchBlob.fs.dirs;
 var local_path = '';
+const toTop = require('../img/toTop.png')
+const unknow = require('../img/unknow.png')
+const dir = require('../img/dir.png')
+const pdf = require('../img/pdf.png')
 
 
 export default class IndexPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: '文件目录',
+        headerTitle: '阅读·目录',
     });
 
     constructor(props) {
@@ -88,7 +91,7 @@ export default class IndexPage extends Component {
                     renderRow={this.renderRow}
                     enableEmptySections={true}
                     renderHeader={this.renderHeader}
-                    style={{ borderTopWidth: 0.5, borderColor: '#BFBFBF' }}
+                    style={{flex:1,backgroundColor:'#fff'}}
                 />
             )
         }
@@ -205,21 +208,21 @@ export default class IndexPage extends Component {
         if (index == -1) {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
-                    <Icon type={'\uE662'} color='#ffcc00' />
+                    <Image source={dir} style={{height:30,width:30}}/>
                     <Text style={styles.row_text}>{rowdate}</Text>
                 </TouchableOpacity>
             )
         } else if (last_name == 'pdf') {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
-                    <Icon type={'\uE6B3'} color='#cc0000' />
+                    <Image source={pdf} style={{height:30,width:30}}/>
                     <Text style={styles.row_text}>{rowdate}</Text>
                 </TouchableOpacity>
             )
         } else {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
-                    <Icon type={'\uE664'} color='#808080' />
+                    <Image source={unknow} style={{height:30,width:30}}/>
                     <Text style={styles.row_text}>{rowdate}</Text>
                 </TouchableOpacity>
             )
@@ -238,11 +241,13 @@ export default class IndexPage extends Component {
             head_title+=(element+'>')
         }, this)
         console.log(head_title)
+        head_title=head_title.substr(1)
         return (
-            <View>
+            <View >
                 <Text style={styles.head_nav}>{head_title}</Text>
                 <TouchableOpacity style={styles.headStyle} onPress={() => { this.return_before() }}>
-                    <Text>..返回上一层</Text>
+                    <Image source={toTop} style={{height:25,width:25}}/>
+                    <Text style={{fontSize:16,}}>  返回上一层</Text>
                 </TouchableOpacity>
                 {this.state.sdcard_fileList.length == 0 ? <Text style={{ paddingLeft: 10, }}>文件夹为空</Text> : <Text></Text>}
             </View>
@@ -267,7 +272,7 @@ export default class IndexPage extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ flex: 1, width: Dimensions.get('window').width, }}>
+                <View style={{ flex: 1, width: Dimensions.get('window').width}}>
                     {this.renderContent(this.state.dataSource.cloneWithRows(this.setState.sdcard_fileList == null ? [] : this.setState.sdcard_fileList))}
                 </View>
             </View>
@@ -282,34 +287,35 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
     },
     renderrow: {
-        height: 35,
-        marginBottom: 3,
-        width: Dimensions.get('window').width, paddingLeft: 10,
+        padding:10,
+        width: Dimensions.get('window').width, 
         justifyContent: 'flex-start',
-        borderBottomWidth: 0.5,
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: '#BFBFBF'
+        backgroundColor:'#fff'
     },
     row_text: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        paddingLeft: 5
+        fontSize: 17,
+        paddingBottom:10,
+        fontWeight: 'normal',
+        marginLeft: 15,
+        borderBottomWidth:0.5,
+        borderColor:'#f2f3f8',
+        flex:1
     },
     headStyle: {
+        flexDirection:'row',
         height: 40,
         marginBottom: 3,
         width: Dimensions.get('window').width,
         paddingLeft: 10,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         borderBottomWidth: 0.5,
-        alignItems: 'flex-start',
+        alignItems: 'center',
         borderColor: '#BFBFBF'
     },
     head_nav:{
-        paddingLeft:10,
-        backgroundColor:'#fff',
-        borderBottomWidth:0.5,
-        borderColor:'#BFBFBF'
+        backgroundColor:'#F6AD3C',
+        color:'#fff',fontSize:14
     }
 });

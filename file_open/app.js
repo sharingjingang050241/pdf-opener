@@ -23,7 +23,7 @@ const Tab = TabNavigator(
             inactiveTintColor: '#979797',
             style: { backgroundColor: '#ffffff', },
             labelStyle: {
-                fontSize: 15, // 文字大小  
+                fontSize: 14, // 文字大小  
             },
         }
     }
@@ -36,10 +36,23 @@ const Navigator = StackNavigator(
   },  
   {  
     navigationOptions:{  
-      headerTintColor:'#FF8247',  
+    //   headerTintColor:'#000',  
       showIcon:true,  
         headerMode:'screen',
-        mode:'card',  
+        mode:'card', 
+        headerTintColor:'#fff',
+        headerTitleStyle:{
+            fontSize:16,
+            color:'#fff',
+            fontWeight:'normal',
+            alignSelf:'center'
+        } ,
+        headerStyle:{
+            backgroundColor:"#F6AD3C",
+            height:50,
+            elevation: 0
+        },
+        
     }
   })
 export default class App extends Component {
