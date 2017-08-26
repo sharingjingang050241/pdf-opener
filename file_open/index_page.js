@@ -19,6 +19,7 @@ import OpenFile from 'react-native-doc-viewer';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Icon from 'antd-mobile/lib/icon';
 import Toast from 'antd-mobile/lib/toast';
+import SplashScreen from 'react-native-splash-screen'
 
 var RNFS = require('react-native-fs');
 const FileOpener = require('react-native-file-opener');
@@ -79,7 +80,9 @@ export default class IndexPage extends Component {
             .catch((err) => { console.log(err) })
     }
     componentDidMount() {
-        // console.log('组件加载完成')
+        setTimeout(()=>{
+            SplashScreen.hide();
+        },2000)
     }
     renderContent(dataSource) {
         const isEmpty = this.state.sdcard_fileList === null || this.state.sdcard_fileList.length === 0

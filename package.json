@@ -17,6 +17,7 @@
     "react-native-fs": "^2.5.1",
     "react-native-pdf": "^1.2.8",
     "react-native-pdf-view": "^0.3.2",
+    "react-native-splash-screen": "^3.0.0",
     "react-navigation": "^1.0.0-beta.11"
   },
   "devDependencies": {
