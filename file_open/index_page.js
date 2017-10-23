@@ -4,13 +4,13 @@ import {
     StyleSheet,
     Text,
     View,
-    Button,
     TouchableOpacity,
     Linking,
     Image,
     Platform,
     Dimensions,
     ListView,
+    Alert
 } from 'react-native';
 // const DocumentPicker = require('react-native').NativeModules.RNDocumentPicker;
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
@@ -19,6 +19,7 @@ import OpenFile from 'react-native-doc-viewer';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Icon from 'antd-mobile/lib/icon';
 import Toast from 'antd-mobile/lib/toast';
+import Button from 'antd-mobile/lib/button';
 import SplashScreen from 'react-native-splash-screen'
 
 var RNFS = require('react-native-fs');
@@ -30,12 +31,18 @@ const toTop = require('../img/toTop.png')
 const unknow = require('../img/unknow.png')
 const dir = require('../img/dir.png')
 const pdf = require('../img/pdf.png')
+const search = require('../img/search.png')
 const empty_page = require('../img/empty_page.png')
-
+var allFiles = new Map();
 
 export default class IndexPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: '阅读·目录',
+        headerTitle: '汉中工务段',
+        headerRight:(<Button
+            size='small'
+            style={{marginRight:10,backgroundColor:'transparent',borderWidth:0}}
+            onClick={()=>{navigation.navigate('Search',{ allFiles: allFiles})}}
+        ><Image source={search} style={{height:88,width:88}}/></Button>)
     });
 
     constructor(props) {
@@ -49,7 +56,7 @@ export default class IndexPage extends Component {
         this.touch_row = this.touch_row.bind(this)
         this.renderRow = this.renderRow.bind(this)
         this.renderHeader = this.renderHeader.bind(this)
-
+        this._findAll = this._findAll.bind(this)
     }
     componentWillMount() {
         RNFetchBlob.fs.exists('/sdcard/AboutWorks')
@@ -60,8 +67,9 @@ export default class IndexPage extends Component {
                         // files will an array contains filenames
                         .then((files) => {
                             this.setState({ sdcard_fileList: files })
-                            // console.log(files)
+                            
                         })
+                    this._findAll('/sdcard/AboutWorks')
                 } else {
                     RNFetchBlob.fs.mkdir('/sdcard/AboutWorks')
                         .then(() => {
@@ -79,10 +87,30 @@ export default class IndexPage extends Component {
             })
             .catch((err) => { console.log(err) })
     }
+    _findAll(filePaths) {
+        RNFetchBlob.fs.ls(filePaths)
+            .then((files) => {
+                files.forEach(function(element) {
+                    // console.log(element)
+                    RNFetchBlob.fs.isDir(filePaths+'/'+element)
+                    .then((isDir) => {
+                        // console.log(`file is ${isDir ? '' : 'not'} a directory`)
+                        if (isDir) {
+                             this._findAll(filePaths+'/'+element)
+                            // console.log(filePaths+'/'+element)
+                        } else {
+                            // console.log(filePaths+'/'+element)
+                             allFiles.set(element, filePaths+'/'+element)
+                        }
+                    })
+                }, this);
+            })
+    }
     componentDidMount() {
         setTimeout(()=>{
             SplashScreen.hide();
         },2000)
+        // console.log(allFiles)
     }
     renderContent(dataSource) {
         const isEmpty = this.state.sdcard_fileList === null || this.state.sdcard_fileList.length === 0
@@ -139,55 +167,6 @@ export default class IndexPage extends Component {
                     }
                     if (last_name == 'pdf') {
                         fileType = 'application/pdf'
-                    // } else if (last_name == 'rar') {
-                    //     fileType = 'application/rar'
-                    // } else if (last_name == 'zip') {
-                    //     fileType = 'application/zip'
-                    // } else if (last_name == 'apk') {
-                    //     fileType = 'application/vnd.android.package-archive'
-                    // } else if (last_name == 'doc' || last_name == 'dot') {
-                    //     fileType = 'application/msword'
-                    // } else if (last_name == 'docx') {
-                    //     fileType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                    // } else if (last_name == 'dotx') {
-                    //     fileType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.template'
-                    // } else if (last_name == 'xls' || last_name == 'xlt') {
-                    //     fileType = 'application/vnd.ms-excel'
-                    // } else if (last_name == 'xlsx') {
-                    //     fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                    // } else if (last_name == 'xltx') {
-                    //     fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.template'
-                    // } else if (last_name == 'ppt' || last_name == 'pot' || last_name == 'pps') {
-                    //     fileType = 'application/vnd.ms-powerpoint'
-                    // } else if (last_name == 'pptx') {
-                    //     fileType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-                    // } else if (last_name == 'potx') {
-                    //     fileType = 'application/vnd.openxmlformats-officedocument.presentationml.template'
-                    // } else if (last_name == 'ppsx') {
-                    //     fileType = 'application/vnd.openxmlformats-officedocument.presentationml.slideshow'
-                    // } else if (last_name == 'frm' || last_name == 'maker' || last_name == 'frame' || last_name == 'fb' || last_name == 'book' || last_name == 'fbdoc') {
-                    //     fileType = 'application/x-maker'
-                    // } else if (last_name == 'mp3') {
-                    //     fileType = 'audio/mpeg'
-                    // } else if (last_name == 'jpeg' || last_name == 'jpg' || last_name == 'jpe') {
-                    //     fileType = 'image/jpeg'
-                    // } else if (last_name == 'png') {
-                    //     fileType = 'image/png'
-                    // } else if (last_name == 'gif') {
-                    //     fileType = 'image/gif'
-
-                    // } else if (last_name == 'mp4') {
-                    //     fileType = 'video/mp4'
-                    // } else if (last_name == 'avi') {
-                    //     fileType = 'video/x-msvideo'
-                    // } else if (last_name == 'txt') {
-                    //     fileType = 'text/plain'
-                    // } else if (last_name == 'apk') {
-                    //     fileType = 'application/vnd.android.package-archive'
-                    // } else if (last_name == 'wmv') {
-                    //     fileType = 'video/x-ms-wmv'
-                    // } else if (last_name == 'htm' || last_name == 'html' || last_name == 'hts' || last_name == 'xml') {
-                    //     fileType = 'text/html'
                     } else {
                         Toast.fail('暂不支持文件类型', 1.5)
                         return
@@ -216,21 +195,27 @@ export default class IndexPage extends Component {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
                     <Image source={dir} style={{height:30,width:30}}/>
-                    <Text style={styles.row_text}>{rowdate}</Text>
+                    <View style={styles.row_View}>
+                        <Text style={styles.row_text}>{rowdate}</Text>
+                    </View>
                 </TouchableOpacity>
             )
         } else if (last_name == 'pdf') {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
                     <Image source={pdf} style={{height:30,width:30}}/>
-                    <Text style={styles.row_text}>{rowdate}</Text>
+                    <View style={styles.row_View}>
+                        <Text style={styles.row_text}>{rowdate}</Text>
+                    </View>
                 </TouchableOpacity>
             )
         } else {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
                     <Image source={unknow} style={{height:30,width:30}}/>
-                    <Text style={styles.row_text}>{rowdate}</Text>
+                    <View style={styles.row_View}>
+                        <Text style={styles.row_text}>{rowdate}</Text>
+                    </View>
                 </TouchableOpacity>
             )
         }
@@ -242,12 +227,12 @@ export default class IndexPage extends Component {
         var array = new Array();
         var nav_path = local_path.replace('/sdcard/AboutWorks/', '');
         array = nav_path.split('\/')
-        console.log(array)
+        // console.log(array)
         var head_title = ''
         array.forEach(function (element) {
             head_title+=(element+' > ')
         }, this)
-        console.log(head_title)
+        // console.log(head_title)
         // head_title=head_title.substr(1)
         return (
             <View >
@@ -281,7 +266,7 @@ export default class IndexPage extends Component {
             <View style={styles.container}>
                 <Image source={require('../img/back.png')} style={{alignItems:'center',resizeMode: Image.resizeMode.stretch ,width:Dimensions.get('window').width,height:Dimensions.get('window').height-50}}>
                 <View style={{ flex: 1, width: Dimensions.get('window').width}}>
-                    {this.renderContent(this.state.dataSource.cloneWithRows(this.setState.sdcard_fileList == null ? [] : this.setState.sdcard_fileList))}
+                    {this.renderContent(this.state.dataSource.cloneWithRows(this.state.sdcard_fileList == null ? [] : this.state.sdcard_fileList))}
                 
                 </View>
                 </Image>
@@ -306,13 +291,16 @@ const styles = StyleSheet.create({
     },
     row_text: {
         fontSize: 17,
-        paddingBottom:10,
         fontWeight: 'normal',
+        color:'#fff'
+    },
+    row_View:{
+        flex:1,
         marginLeft: 15,
         borderBottomWidth:0.5,
         borderColor:'#f2f3f8',
-        flex:1,
-        color:'#fff'
+        padding:10,
+        paddingBottom:15
     },
     headStyle: {
         flexDirection:'row',

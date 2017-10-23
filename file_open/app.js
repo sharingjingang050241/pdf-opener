@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation';
 import Pdf_View from './pdf_view';
 import IndexPage from './index_page';
+import Search from './search';
 
 const Tab = TabNavigator(
     {
@@ -33,6 +34,7 @@ const Navigator = StackNavigator(
   {  
     IndexPage:{screen:IndexPage},  
     Pdf_View:{screen:Pdf_View},
+    Search:{screen:Search},
   },  
   {  
     navigationOptions:{  
