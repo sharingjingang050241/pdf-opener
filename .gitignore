@@ -39,6 +39,7 @@ yarn-error.log
 # BUCK
 android/
 ios/
+img/
 buck-out/
 \.buckd/
 *.keystore
