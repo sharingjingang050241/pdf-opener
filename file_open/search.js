@@ -12,15 +12,19 @@ import {
     ListView,
     TextInput
 } from 'react-native';
+import Toast from 'antd-mobile/lib/toast';
 const search = require('../img/search.png')
 const empty_page = require('../img/empty_page.png')
 const pdf = require('../img/pdf.png')
+const unknow = require('../img/unknow.png')
+const dir = require('../img/dir.png')
 var searchMap = new Map();
 
 export default class IndexPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: '汉中工务段',
-        header:null
+        headerTitle: 'PDF阅读',
+        header:null,
+        gesturesEnabled:true
     });
     constructor(props) {
         super(props);
@@ -72,10 +76,15 @@ export default class IndexPage extends Component {
     }
     renderContent(dataSource) {
         const isEmpty = this.state.data_list === null || this.state.data_list.length === 0
-        if (isEmpty) {
+        if (isEmpty&&this.state.value!='') {
             return <View style={{ flex:1, alignItems: 'center', justifyContent: 'flex-start' ,backgroundColor:'rgba(255,255,255,0.2)'}}>
                 <Image source={empty_page} style={{height:35,width:35}}/>
+                <Text>未检索到关于“<Text style={{color:'red'}}>{this.state.value}</Text>”的文件</Text>
                 </View>
+        }else if(isEmpty&&this.state.value==''){
+            return <View style={{ flex:1, alignItems: 'center', justifyContent: 'flex-start' ,backgroundColor:'rgba(255,255,255,0.2)'}}>
+            {/* <Image source={empty_page} style={{height:35,width:35}}/> */}
+            </View>
         } else {
             return (
                 <ListView
@@ -88,15 +97,45 @@ export default class IndexPage extends Component {
         }
     }
     renderRow(rowdate) {
-        // console.log(rowdate)
-        return(
-            <TouchableOpacity style={styles.renderrow} onPress={()=>this._toPdfView(rowdate) } >
-                <Image source={pdf} style={{height:30,width:30}}/>
-                <View style={styles.row_View}>
-                    <Text style={styles.row_text}>{rowdate}</Text>
-                </View>
-            </TouchableOpacity>
-        )
+        // // console.log(rowdate)
+        // return(
+        //     <TouchableOpacity style={styles.renderrow} onPress={()=>this._toPdfView(rowdate) } >
+        //         <Image source={pdf} style={{height:30,width:30}}/>
+        //         <View style={styles.row_View}>
+        //             <Text style={styles.row_text}>{rowdate}</Text>
+        //         </View>
+        //     </TouchableOpacity>
+        // )
+        let index = rowdate.lastIndexOf('.')
+        var last_name = rowdate.substring(index + 1)
+        if (index == -1) {
+            return (
+                <TouchableOpacity style={styles.renderrow} onPress={() => { this._toPdfView(rowdate) }}>
+                    <Image source={dir} style={{height:30,width:30}}/>
+                    <View style={styles.row_View}>
+                        <Text style={styles.row_text}>{rowdate}</Text>
+                    </View>
+                </TouchableOpacity>
+            )
+        } else if (last_name == 'pdf') {
+            return (
+                <TouchableOpacity style={styles.renderrow} onPress={() => { this._toPdfView(rowdate) }}>
+                    <Image source={pdf} style={{height:30,width:30}}/>
+                    <View style={styles.row_View}>
+                        <Text style={styles.row_text}>{rowdate}</Text>
+                    </View>
+                </TouchableOpacity>
+            )
+        } else {
+            return (
+                <TouchableOpacity style={styles.renderrow} onPress={() => { this._toPdfView(rowdate) }}>
+                    <Image source={unknow} style={{height:30,width:30}}/>
+                    <View style={styles.row_View}>
+                        <Text style={styles.row_text}>{rowdate}</Text>
+                    </View>
+                </TouchableOpacity>
+            )
+        }
     }
     _toPdfView(rowdate){
         const { navigate } = this.props.navigation;
@@ -104,23 +143,35 @@ export default class IndexPage extends Component {
         // console.log(rowdate)
         let pathPdf = searchMap.get(rowdate)
         // console.log(pathPdf)
-        navigate('Pdf_View', { filePath: pathPdf, fileName: rowdate })
+        let index = rowdate.lastIndexOf('.')
+        var last_name = rowdate.substring(index + 1)
+        if (index == -1) {
+            Toast.fail('不支持文件类型', 1.5)
+            return
+        }
+        if (last_name == 'pdf') {
+            navigate('Pdf_View', { filePath: pathPdf, fileName: rowdate })
+        } else {
+            Toast.fail('暂不支持文件类型', 1.5)
+            return
+        }
+        
     }
     render() {
         // console.log(this.state.data_list)
         return (
             <View style={styles.container}>
-                <Image source={require('../img/back.png')} style={{resizeMode: Image.resizeMode.stretch ,width:Dimensions.get('window').width,height:Dimensions.get('window').height}}>
-                    <View style={{backgroundColor:'#ccdd',height:50,flexDirection:'row',alignItems:'center'}}>
+                {/* <Image source={require('../img/back.png')} style={{resizeMode: Image.resizeMode.stretch ,width:Dimensions.get('window').width,height:Dimensions.get('window').height}}> */}
+                    <View style={{backgroundColor:'#fff',height:50,flexDirection:'row',alignItems:'center',elevation: 4,}}>
                         <Image
                             source={search}
                             style={{height:30,width:30,margin:6}}
                         />
                         <TextInput
-                            style={{flex:1,color:'#fff',fontSize:16}}
+                            style={{flex:1,color:'#000',fontSize:16}}
                             underlineColorAndroid='transparent'
                             placeholder='输入搜索内容'
-                            placeholderTextColor='#fff'
+                            placeholderTextColor='#000'
                             autoFocus={true}
                             value={this.state.value}
                             onChangeText={this._changeText}
@@ -130,7 +181,7 @@ export default class IndexPage extends Component {
                     {this.renderContent(this.state.dataSource.cloneWithRows(this.state.data_list == null ? [] : this.state.data_list))}
                 
                     </View>
-                </Image>
+                {/* </Image> */}
             </View>
         )
     }
@@ -140,7 +191,7 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#000',
+        backgroundColor: '#fff',
     },
     renderrow: {
         padding:10,
@@ -153,7 +204,7 @@ const styles = StyleSheet.create({
     row_text: {
         fontSize: 17,
         fontWeight: 'normal',
-        color:'#fff'
+        color:'#000'
     },
     row_View:{
         flex:1,

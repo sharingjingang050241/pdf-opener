@@ -37,12 +37,15 @@ var allFiles = new Map();
 
 export default class IndexPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: '汉中工务段',
+        headerTitle: 'PDF阅读',
         headerRight:(<Button
             size='small'
             style={{marginRight:10,backgroundColor:'transparent',borderWidth:0}}
             onClick={()=>{navigation.navigate('Search',{ allFiles: allFiles})}}
-        ><Image source={search} style={{height:88,width:88}}/></Button>)
+        ><Image source={search} style={{height:78,width:78}}/></Button>),
+        headerTintColor:'#000',
+        headerStyle:{backgroundColor:'#fff'},
+        headerTitleStyle:{color:'#000',alignSelf:'center'}
     });
 
     constructor(props) {
@@ -239,7 +242,7 @@ export default class IndexPage extends Component {
                 <Text style={styles.head_nav}>{head_title}</Text>
                 <TouchableOpacity style={styles.headStyle} onPress={() => { this.return_before() }}>
                     <Image source={toTop} style={{height:25,width:25}}/>
-                    <Text style={{fontSize:16,paddingLeft:15,color:'#fff'}}>返回上一层</Text>
+                    <Text style={{fontSize:16,paddingLeft:15,color:'#000'}}>返回上一层</Text>
                 </TouchableOpacity>
                 {/* {this.state.sdcard_fileList.length == 0 ? <Text style={{ paddingLeft: 10, }}>文件夹为空</Text> : <Text></Text>} */}
             </View>
@@ -264,12 +267,12 @@ export default class IndexPage extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image source={require('../img/back.png')} style={{alignItems:'center',resizeMode: Image.resizeMode.stretch ,width:Dimensions.get('window').width,height:Dimensions.get('window').height-50}}>
+                {/* <Image source={require('../img/back.png')} style={{alignItems:'center',resizeMode: Image.resizeMode.stretch ,width:Dimensions.get('window').width,height:Dimensions.get('window').height-50}}> */}
                 <View style={{ flex: 1, width: Dimensions.get('window').width}}>
                     {this.renderContent(this.state.dataSource.cloneWithRows(this.state.sdcard_fileList == null ? [] : this.state.sdcard_fileList))}
                 
                 </View>
-                </Image>
+                {/* </Image> */}
             </View>
         )
     }
@@ -279,7 +282,7 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#000',
+        backgroundColor: '#fff',
     },
     renderrow: {
         padding:10,
@@ -292,7 +295,7 @@ const styles = StyleSheet.create({
     row_text: {
         fontSize: 17,
         fontWeight: 'normal',
-        color:'#fff'
+        color:'#000'
     },
     row_View:{
         flex:1,
@@ -315,7 +318,7 @@ const styles = StyleSheet.create({
     },
     head_nav:{
         backgroundColor:'rgba(255,255,255,0.2)',
-        color:'#fff',fontSize:14,padding:5,
+        color:'#000',fontSize:14,padding:5,
         width:Dimensions.get('window').width,
         flexWrap:'wrap'
     }

@@ -16,6 +16,10 @@ import Toast from 'antd-mobile/lib/toast';
 export default class PdfView extends Component {
     static navigationOptions = ({ navigation }) => ({
     headerTitle: `${navigation.state.params.fileName}`,
+    headerTintColor:'#000',
+    headerStyle:{backgroundColor:'#fff'},
+    headerTitleStyle:{color:'#000',alignSelf:'center'},
+    gesturesEnabled:true
   })
     constructor(props) {
         super(props)
@@ -79,7 +83,7 @@ export default class PdfView extends Component {
                             console.log(error);
                         }}
                         style={styles.pdf} />
-                <View style={{flexDirection:'row',justifyContent:'flex-end',alignItems:'center',width:Dimensions.get('window').width,paddingRight:50}}>
+                <View style={{flexDirection:'row',justifyContent:'flex-end',alignItems:'center',width:Dimensions.get('window').width,paddingRight:20}}>
                     <Text style={{color:'#D2691E',paddingRight:10}}>当前页数 {this.state.page}/{this.state.pageCount}</Text>
                     <TextInput
                         onChangeText={(text) => this.setState({text})}
