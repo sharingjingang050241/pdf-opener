@@ -176,6 +176,11 @@ export default class IndexPage extends Component {
                             value={this.state.value}
                             onChangeText={this._changeText}
                         />
+                        <TouchableOpacity onPress={()=>this.props.navigation.goBack()} style={{borderLeftWidth:1,padding:6,borderLeftColor:'#dcdcdc'}}>
+                            <Text style={{fontSize:16}}>
+                                取消
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1, width: Dimensions.get('window').width}}>
                     {this.renderContent(this.state.dataSource.cloneWithRows(this.state.data_list == null ? [] : this.state.data_list))}
@@ -208,10 +213,10 @@ const styles = StyleSheet.create({
     },
     row_View:{
         flex:1,
-        marginLeft: 15,
+        marginLeft: 10,
         borderBottomWidth:0.5,
         borderColor:'#f2f3f8',
         padding:10,
-        paddingBottom:15
+        paddingBottom:10
     },
 })

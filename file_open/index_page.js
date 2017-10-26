@@ -37,7 +37,7 @@ var allFiles = new Map();
 
 export default class IndexPage extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        headerTitle: 'PDF阅读',
+        headerTitle: '汉中工务段',
         headerRight:(<Button
             size='small'
             style={{marginRight:10,backgroundColor:'transparent',borderWidth:0}}
@@ -197,7 +197,7 @@ export default class IndexPage extends Component {
         if (index == -1) {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
-                    <Image source={dir} style={{height:30,width:30}}/>
+                    <Image source={dir} style={{height:35,width:35}}/>
                     <View style={styles.row_View}>
                         <Text style={styles.row_text}>{rowdate}</Text>
                     </View>
@@ -206,7 +206,7 @@ export default class IndexPage extends Component {
         } else if (last_name == 'pdf') {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
-                    <Image source={pdf} style={{height:30,width:30}}/>
+                    <Image source={pdf} style={{height:35,width:35}}/>
                     <View style={styles.row_View}>
                         <Text style={styles.row_text}>{rowdate}</Text>
                     </View>
@@ -215,7 +215,7 @@ export default class IndexPage extends Component {
         } else {
             return (
                 <TouchableOpacity style={styles.renderrow} onPress={() => { this.touch_row(rowdate) }}>
-                    <Image source={unknow} style={{height:30,width:30}}/>
+                    <Image source={unknow} style={{height:35,width:35}}/>
                     <View style={styles.row_View}>
                         <Text style={styles.row_text}>{rowdate}</Text>
                     </View>
@@ -240,9 +240,11 @@ export default class IndexPage extends Component {
         return (
             <View >
                 <Text style={styles.head_nav}>{head_title}</Text>
-                <TouchableOpacity style={styles.headStyle} onPress={() => { this.return_before() }}>
-                    <Image source={toTop} style={{height:25,width:25}}/>
-                    <Text style={{fontSize:16,paddingLeft:15,color:'#000'}}>返回上一层</Text>
+                <TouchableOpacity style={styles.renderrow} onPress={() => { this.return_before() }}>
+                    <Image source={toTop} style={{height:35,width:35}}/>
+                    <View style={styles.row_View}>
+                        <Text style={styles.row_text}>返回上一层</Text>
+                    </View>
                 </TouchableOpacity>
                 {/* {this.state.sdcard_fileList.length == 0 ? <Text style={{ paddingLeft: 10, }}>文件夹为空</Text> : <Text></Text>} */}
             </View>
@@ -299,11 +301,13 @@ const styles = StyleSheet.create({
     },
     row_View:{
         flex:1,
-        marginLeft: 15,
+        marginLeft: 10,
         borderBottomWidth:0.5,
         borderColor:'#f2f3f8',
-        padding:10,
-        paddingBottom:15
+        padding:5,
+        paddingBottom:10,
+        flexDirection:'row',
+        alignItems:'center'
     },
     headStyle: {
         flexDirection:'row',

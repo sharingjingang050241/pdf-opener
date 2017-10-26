@@ -15,7 +15,7 @@ import Toast from 'antd-mobile/lib/toast';
 
 export default class PdfView extends Component {
     static navigationOptions = ({ navigation }) => ({
-    headerTitle: `${navigation.state.params.fileName}`,
+    headerTitle: `${navigation.state.params.fileName.replace('.pdf','')}`,
     headerTintColor:'#000',
     headerStyle:{backgroundColor:'#fff'},
     headerTitleStyle:{color:'#000',alignSelf:'center'},
@@ -26,7 +26,7 @@ export default class PdfView extends Component {
         this.state = {
             page: 1,
             pageCount: 1,
-            text:0
+            text:1
         }
         this.pdf = null;
     }
@@ -83,8 +83,14 @@ export default class PdfView extends Component {
                             console.log(error);
                         }}
                         style={styles.pdf} />
-                <View style={{flexDirection:'row',justifyContent:'flex-end',alignItems:'center',width:Dimensions.get('window').width,paddingRight:20}}>
-                    <Text style={{color:'#D2691E',paddingRight:10}}>当前页数 {this.state.page}/{this.state.pageCount}</Text>
+                <View style={{height:5,backgroundColor:'gray',alignItems:'flex-start'}}>
+                        <View style={{backgroundColor:'#f84',height:5,width:(Number(this.state.page)/Number(this.state.pageCount))*Dimensions.get('window').width}}></View>
+                </View>
+                <View style={{flexDirection:'row',justifyContent:'space-around',alignItems:'center',width:Dimensions.get('window').width,backgroundColor:"#fff"}}>
+                    <TouchableHighlight  disabled={this.state.page==1} style={this.state.page==1?styles.btnDisable:styles.btn} onPress={()=>this.prePage()}>
+                        <Text style={this.state.page==1?styles.btnTextDis:styles.btnText}>{'上一页'}</Text>
+                    </TouchableHighlight>
+                    <View style={{flexDirection:'row',justifyContent:'space-around',alignItems:'center',}}>
                     <TextInput
                         onChangeText={(text) => this.setState({text})}
                         value={this.state.text+''}
@@ -93,15 +99,16 @@ export default class PdfView extends Component {
                         style={styles.input_style}
                         underlineColorAndroid='transparent'
                     />
-                    <TouchableHighlight   style={styles.btn} onPress={()=>this.to_page()}>
-                        <Text style={styles.btnText}>{'跳转'}</Text>
+                    <TouchableHighlight    onPress={()=>this.to_page()}>
+                        <Text style={styles.turn}>{'跳转'}</Text>
                     </TouchableHighlight>
-                    <TouchableHighlight  disabled={this.state.page==1} style={this.state.page==1?styles.btnDisable:styles.btn} onPress={()=>this.prePage()}>
-                        <Text style={styles.btnText}>{'上一页'}</Text>
-                    </TouchableHighlight>
+                    </View>
                     <TouchableHighlight  disabled={this.state.page==this.state.pageCount} style={this.state.page==this.state.pageCount?styles.btnDisable:styles.btn}  onPress={()=>this.nextPage()}>
-                        <Text style={styles.btnText}>{'下一页'}</Text>
+                        <Text style={this.state.page==this.state.pageCount?styles.btnTextDis:styles.btnText}>{'下一页'}</Text>
                     </TouchableHighlight>
+                </View>
+                <View style={styles.pagect}>
+                    <Text style={{color:'#fff',fontWeight:'bold'}}>{this.state.page}/{this.state.pageCount}</Text>
                 </View>
             </View>
         )
@@ -111,7 +118,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // justifyContent: 'center',
-        alignItems: 'center',
+        // alignItems: 'center',
         backgroundColor: '#EeEeEe',
     },
     pdf: {
@@ -121,23 +128,52 @@ const styles = StyleSheet.create({
     btn: {
         margin: 5,
         padding:5,
-        backgroundColor: "#ff9900",
-        borderRadius:4
+        backgroundColor: "gray",
+        borderRadius:15,
+        borderWidth:1,
+        borderColor:"gray",
+        paddingRight:9,
+        paddingLeft:9,
     },
     btnDisable: {
         margin: 5,
         padding:5,
-        backgroundColor: "gray",
-        borderRadius:4
+        backgroundColor: "#fff",
+        borderRadius:15,
+        borderWidth:1,
+        borderColor:"gray",
+        paddingRight:9,
+        paddingLeft:9,
     },
     btnText: {
-        color: "#FFF",
+        color: "#fff",
+    },
+    btnTextDis:{
+        color: "#989898",
     },
     input_style:{
         borderWidth:0.5,
         borderColor:'#aeaeae',
         height:30,
         padding:0,margin:0,textAlign:'center',
-        width:35
+        width:50,
+        borderRadius:15,
+        color:"#f84"
+    },
+    pagect:{
+        position:'absolute',
+        left:20,
+        bottom:56,
+        backgroundColor:"rgba(0,0,0,0.5)",
+        padding:5,
+        paddingRight:9,
+        paddingLeft:9,
+        borderRadius:15
+    },
+    
+    turn:{
+        color:"gray",
+        marginLeft:5,
+        textDecorationLine:'underline'
     }
 })
